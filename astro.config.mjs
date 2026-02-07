@@ -2,9 +2,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // Right now static — later we change to 'server' or 'hybrid' when adding Supabase backend
-  output: 'static',
-  
-  // Optional: site URL for better previews (update with your Vercel URL later)
-  // site: 'https://your-app-name.vercel.app',
+  output: 'static',                // MUST be static for GitHub Pages
+  base: '/learninghub/',           // Your repo name – include trailing slash
+  site: 'https://vectflix.github.io/learninghub/',  // optional but good
 });
