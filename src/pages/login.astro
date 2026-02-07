@@ -8,7 +8,6 @@ const title = 'Login - Learning Hub';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{title}</title>
-    <!-- Fixed CSS path – Astro builds may hash it, but this should work if global.css is in dist/styles -->
     <link rel="stylesheet" href="/styles/global.css" />
   </head>
   <body>
@@ -29,17 +28,28 @@ const title = 'Login - Learning Hub';
       </form>
 
       <p id="message"></p>
+      <p id="debug-info" style="color: #666; font-size: 0.9rem; margin-top: 1rem;"></p>
     </div>
 
     <script type="module">
-      // Use relative import – from pages/ to lib/
-      import { supabase } from '../lib/supabase.js';
+      // Debug info
+      document.getElementById('debug-info').textContent = 'Loading Supabase...';
 
-      console.log('Supabase client loaded:', supabase ? 'YES' : 'NO');
-      console.log('Env vars available?', {
-        url: import.meta.env.PUBLIC_SUPABASE_URL,
-        key: import.meta.env.PUBLIC_SUPABASE_ANON_KEY ? 'YES (hidden)' : 'NO'
-      });
+      let supabase;
+      try {
+        const module = await import('../lib/supabase.js');
+        supabase = module.supabase;
+        document.getElementById('debug-info').textContent += ' Supabase imported OK';
+      } catch (err) {
+        document.getElementById('debug-info').textContent += ' Import failed: ' + err.message;
+        console.error('Supabase import error:', err);
+      }
+
+      if (!supabase) {
+        document.getElementById('message').textContent = 'Supabase not loaded – check console';
+        document.getElementById('message').className = 'error';
+        return;
+      }
 
       const form = document.getElementById('auth-form');
       const message = document.getElementById('message');
@@ -55,34 +65,37 @@ const title = 'Login - Learning Hub';
         const password = document.getElementById('password').value;
 
         if (!email || !password) {
-          message.textContent = 'Please fill email and password';
+          message.textContent = 'Fill in email and password';
           message.className = 'error';
           btn.disabled = false;
           btn.textContent = 'Sign Up / Log In';
           return;
         }
 
-        // Try signup
-        let { data, error } = await supabase.auth.signUp({ email, password });
+        try {
+          // Try signup first
+          let { data, error } = await supabase.auth.signUp({ email, password });
 
-        // If already exists, try login
-        if (error && (error.message.includes('already registered') || error.code === 'user_already_registered')) {
-          ({ data, error } = await supabase.auth.signInWithPassword({ email, password }));
-        }
+          if (error) {
+            if (error.message.includes('already registered') || error.code === 'user_already_registered') {
+              // Try login if exists
+              ({ data, error } = await supabase.auth.signInWithPassword({ email, password }));
+            }
+          }
 
-        if (error) {
-          message.textContent = error.message || 'Login failed – check console';
+          if (error) {
+            message.textContent = error.message || 'Error – see console';
+            message.className = 'error';
+            console.error('Auth error:', error);
+          } else {
+            message.textContent = data.session ? 'Logged in!' : 'Check email for confirmation';
+            message.className = 'success';
+            setTimeout(() => window.location.href = '/', 2500);
+          }
+        } catch (err) {
+          message.textContent = 'Network or setup error: ' + err.message;
           message.className = 'error';
-          console.error('Supabase error:', error);
-        } else {
-          message.textContent = data.session ? 'Logged in successfully!' : 'Check your email for confirmation link';
-          message.className = 'success';
-          console.log('Auth success:', data);
-
-          // Redirect after 2s
-          setTimeout(() => {
-            window.location.href = '/timetable';
-          }, 2000);
+          console.error('Submit error:', err);
         }
 
         btn.disabled = false;
