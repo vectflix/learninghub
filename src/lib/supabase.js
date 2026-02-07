@@ -5,7 +5,7 @@ const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase env vars missing!');
+  console.error('Missing Supabase env vars – check Render environment variables');
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
