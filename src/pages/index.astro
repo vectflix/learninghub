@@ -1,1 +1,122 @@
+---
+---
 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Malcolm Learning Hub</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to bottom, #f0f4ff, #ffffff);
+        color: #333;
+      }
+      header {
+        background: #4a6ee0;
+        color: white;
+        padding: 60px 20px 40px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0;
+        font-size: 2.8em;
+      }
+      .tagline {
+        font-size: 1.3em;
+        margin: 15px 0 30px;
+        opacity: 0.95;
+      }
+      .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .btn {
+        background: white;
+        color: #4a6ee0;
+        padding: 16px 30px;
+        font-size: 1.2em;
+        font-weight: bold;
+        border: none;
+        border-radius: 50px;
+        text-decoration: none;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: all 0.2s;
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      }
+      .btn.secondary {
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+      }
+      main {
+        padding: 40px 20px;
+        max-width: 900px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      nav {
+        background: #333;
+        padding: 12px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      nav a {
+        color: white;
+        margin: 0 18px;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      nav a:hover {
+        color: #a0c0ff;
+      }
+      @media (min-width: 600px) {
+        .buttons {
+          flex-direction: row;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/learning">Learning</a>
+      <a href="/timetable">Timetable</a>
+    </nav>
+
+    <header>
+      <h1>Malcolm Learning Hub</h1>
+      <p class="tagline">Your free KCSE prep tool — inspired by Zeraki</p>
+      <div class="buttons">
+        <a href="/learning" class="btn">Start Learning Videos</a>
+        <a href="/timetable" class="btn secondary">Generate Timetable</a>
+      </div>
+    </header>
+
+    <main>
+      <h2 style="color: #4a6ee0; margin-bottom: 20px;">Coming Soon</h2>
+      <p style="font-size: 1.1em; line-height: 1.6;">
+        • HD video lessons for Maths, Physics, Chemistry, Biology & more<br>
+        • Automatic timetable generator with no clashes<br>
+        • Simple quizzes & progress tracking<br>
+        • Built for Nairobi students & teachers
+      </p>
+      <p style="margin-top: 30px; color: #666;">
+        Currently in development — more features added every day 🚀
+      </p>
+    </main>
+  </body>
+</html>
