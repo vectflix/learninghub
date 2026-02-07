@@ -5,10 +5,11 @@ const title = 'Login / Sign Up - Learning Hub';
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>{title}</title>
-    <link rel="stylesheet" href="/styles/global.css" />
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>{title}</title>
+   <!-- Use Astro's asset handling for CSS -->
+   <link rel="stylesheet" href={Astro.url.pathname + 'styles/global.css'} />
   </head>
   <body>
     <nav>
