@@ -1,6 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';  // If you have a shared layout, import it; otherwise use the HTML below
-const { title = 'Login / Sign Up - Learning Hub' } = Astro.props;
+const title = 'Login / Sign Up - Learning Hub';
 ---
 
 <!doctype html>
@@ -9,71 +8,7 @@ const { title = 'Login / Sign Up - Learning Hub' } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{title}</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(to bottom, #f0f4ff, #ffffff);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-      nav {
-        background: #333;
-        padding: 15px;
-        text-align: center;
-      }
-      nav a {
-        color: white;
-        margin: 0 20px;
-        font-weight: bold;
-        text-decoration: none;
-      }
-      .container {
-        max-width: 400px;
-        margin: 60px auto;
-        padding: 30px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      }
-      h1 {
-        text-align: center;
-        color: #4a6ee0;
-        margin-bottom: 30px;
-      }
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-      input {
-        padding: 14px;
-        font-size: 1em;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-      }
-      button {
-        padding: 14px;
-        font-size: 1.1em;
-        background: #4a6ee0;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-      button:hover {
-        background: #3a5ac0;
-      }
-      #message {
-        text-align: center;
-        margin-top: 20px;
-        font-weight: bold;
-      }
-      .success { color: green; }
-      .error { color: red; }
-    </style>
+    <link rel="stylesheet" href="/styles/global.css" />
   </head>
   <body>
     <nav>
@@ -111,10 +46,10 @@ const { title = 'Login / Sign Up - Learning Hub' } = Astro.props;
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
-        // Try sign up first
+        // Try sign up
         let { data, error } = await supabase.auth.signUp({ email, password });
 
-        // If user already exists, try sign in
+        // If already registered, try sign in
         if (error && error.message.includes('already registered')) {
           ({ data, error } = await supabase.auth.signInWithPassword({ email, password }));
         }
@@ -123,12 +58,11 @@ const { title = 'Login / Sign Up - Learning Hub' } = Astro.props;
           message.textContent = error.message;
           message.className = 'error';
         } else {
-          message.textContent = 'Success! ' + (data.user ? 'Logged in' : 'Check your email to confirm signup');
+          message.textContent = data.user ? 'Logged in successfully!' : 'Check your email to confirm signup';
           message.className = 'success';
 
-          // Redirect after 2 seconds
           setTimeout(() => {
-            window.location.href = '/timetable';  // or '/' or a dashboard page
+            window.location.href = '/timetable';
           }, 2000);
         }
 
