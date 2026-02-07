@@ -1,15 +1,15 @@
 ---
-const title = 'Login / Sign Up - Learning Hub';
+const title = 'Login - Learning Hub';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-   <meta charset="UTF-8" />
-   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   <title>{title}</title>
-   <!-- Use Astro's asset handling for CSS -->
-   <link rel="stylesheet" href={Astro.url.pathname + 'styles/global.css'} />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{title}</title>
+    <!-- Fixed CSS path – Astro builds may hash it, but this should work if global.css is in dist/styles -->
+    <link rel="stylesheet" href="/styles/global.css" />
   </head>
   <body>
     <nav>
@@ -23,8 +23,8 @@ const title = 'Login / Sign Up - Learning Hub';
       <h1>Login / Sign Up</h1>
 
       <form id="auth-form">
-        <input type="email" id="email" placeholder="Email" required autocomplete="email" />
-        <input type="password" id="password" placeholder="Password" required autocomplete="current-password" />
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
         <button type="submit" id="submit-btn">Sign Up / Log In</button>
       </form>
 
@@ -32,7 +32,14 @@ const title = 'Login / Sign Up - Learning Hub';
     </div>
 
     <script type="module">
-      import { supabase } from '/src/lib/supabase.js';
+      // Use relative import – from pages/ to lib/
+      import { supabase } from '../lib/supabase.js';
+
+      console.log('Supabase client loaded:', supabase ? 'YES' : 'NO');
+      console.log('Env vars available?', {
+        url: import.meta.env.PUBLIC_SUPABASE_URL,
+        key: import.meta.env.PUBLIC_SUPABASE_ANON_KEY ? 'YES (hidden)' : 'NO'
+      });
 
       const form = document.getElementById('auth-form');
       const message = document.getElementById('message');
@@ -42,26 +49,37 @@ const title = 'Login / Sign Up - Learning Hub';
         e.preventDefault();
         message.textContent = '';
         btn.disabled = true;
-        btn.textContent = 'Loading...';
+        btn.textContent = 'Processing...';
 
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
-        // Try sign up
+        if (!email || !password) {
+          message.textContent = 'Please fill email and password';
+          message.className = 'error';
+          btn.disabled = false;
+          btn.textContent = 'Sign Up / Log In';
+          return;
+        }
+
+        // Try signup
         let { data, error } = await supabase.auth.signUp({ email, password });
 
-        // If already registered, try sign in
-        if (error && error.message.includes('already registered')) {
+        // If already exists, try login
+        if (error && (error.message.includes('already registered') || error.code === 'user_already_registered')) {
           ({ data, error } = await supabase.auth.signInWithPassword({ email, password }));
         }
 
         if (error) {
-          message.textContent = error.message;
+          message.textContent = error.message || 'Login failed – check console';
           message.className = 'error';
+          console.error('Supabase error:', error);
         } else {
-          message.textContent = data.user ? 'Logged in successfully!' : 'Check your email to confirm signup';
+          message.textContent = data.session ? 'Logged in successfully!' : 'Check your email for confirmation link';
           message.className = 'success';
+          console.log('Auth success:', data);
 
+          // Redirect after 2s
           setTimeout(() => {
             window.location.href = '/timetable';
           }, 2000);
