@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Learning Hub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #f0f4ff, #ffffff);
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      background: #4a6ee0;
+      color: white;
+      text-align: center;
+      padding: 80px 20px 50px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 3.5em;
+    }
+    .tagline {
+      font-size: 1.5em;
+      margin: 20px 0 40px;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .btn {
+      background: white;
+      color: #4a6ee0;
+      padding: 18px;
+      font-size: 1.3em;
+      font-weight: bold;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    }
+    nav {
+      background: #333;
+      padding: 15px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a {
+      color: white;
+      margin: 0 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    nav a:hover {
+      color: #a0c0ff;
+    }
+    main {
+      padding: 50px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    @media (min-width: 600px) {
+      .buttons { flex-direction: row; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/learning.html">Learning</a>
+    <a href="/timetable.html">Timetable</a>
+  </nav>
+
+  <header>
+    <h1>Learning Hub</h1>
+    <p class="tagline">Simple KCSE revision & timetable tool – made in Nairobi</p>
+    <div class="buttons">
+      <a href="/learning.html" class="btn">Watch Lessons</a>
+      <a href="/timetable.html" class="btn">Create Timetable</a>
+    </div>
+  </header>
+
+  <main>
+    <h2>Welcome to Learning Hub</h2>
+    <p>Free tool for Kenyan students: video lessons, auto timetables, quizzes coming soon.</p>
+    <p>Currently basic version – more features added soon!</p>
+  </main>
+</body>
+</html>
