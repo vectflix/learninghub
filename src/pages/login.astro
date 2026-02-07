@@ -28,26 +28,20 @@ const title = 'Login - Learning Hub';
       </form>
 
       <p id="message"></p>
-      <p id="debug-info" style="color: #666; font-size: 0.9rem; margin-top: 1rem;"></p>
+      <p id="debug" style="color:#64748b; font-size:0.9rem; margin-top:1rem; text-align:center;"></p>
     </div>
 
     <script type="module">
-      // Debug info
-      document.getElementById('debug-info').textContent = 'Loading Supabase...';
+      document.getElementById('debug').textContent = 'Initializing...';
 
       let supabase;
       try {
-        const module = await import('../lib/supabase.js');
-        supabase = module.supabase;
-        document.getElementById('debug-info').textContent += ' Supabase imported OK';
+        const { supabase: client } = await import('../lib/supabase.js');
+        supabase = client;
+        document.getElementById('debug').textContent = 'Supabase loaded successfully';
       } catch (err) {
-        document.getElementById('debug-info').textContent += ' Import failed: ' + err.message;
-        console.error('Supabase import error:', err);
-      }
-
-      if (!supabase) {
-        document.getElementById('message').textContent = 'Supabase not loaded – check console';
-        document.getElementById('message').className = 'error';
+        document.getElementById('debug').textContent = 'Failed to load Supabase: ' + err.message;
+        console.error('Import error:', err);
         return;
       }
 
@@ -65,7 +59,7 @@ const title = 'Login - Learning Hub';
         const password = document.getElementById('password').value;
 
         if (!email || !password) {
-          message.textContent = 'Fill in email and password';
+          message.textContent = 'Please fill email and password';
           message.className = 'error';
           btn.disabled = false;
           btn.textContent = 'Sign Up / Log In';
@@ -73,27 +67,23 @@ const title = 'Login - Learning Hub';
         }
 
         try {
-          // Try signup first
           let { data, error } = await supabase.auth.signUp({ email, password });
 
-          if (error) {
-            if (error.message.includes('already registered') || error.code === 'user_already_registered') {
-              // Try login if exists
-              ({ data, error } = await supabase.auth.signInWithPassword({ email, password }));
-            }
+          if (error && (error.message.includes('already registered') || error.code === 'user_already_registered')) {
+            ({ data, error } = await supabase.auth.signInWithPassword({ email, password }));
           }
 
           if (error) {
-            message.textContent = error.message || 'Error – see console';
+            message.textContent = error.message || 'Auth failed';
             message.className = 'error';
-            console.error('Auth error:', error);
+            console.error('Supabase auth error:', error);
           } else {
-            message.textContent = data.session ? 'Logged in!' : 'Check email for confirmation';
+            message.textContent = data.session ? 'Logged in!' : 'Check your email for confirmation';
             message.className = 'success';
             setTimeout(() => window.location.href = '/', 2500);
           }
         } catch (err) {
-          message.textContent = 'Network or setup error: ' + err.message;
+          message.textContent = 'Network error: ' + err.message;
           message.className = 'error';
           console.error('Submit error:', err);
         }
